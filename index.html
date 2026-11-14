@@ -30,6 +30,105 @@
       background: #f4f6f8;
       color: #172c3d;
     }
+<!-- LOGIN DO JORNADA FÁCIL IA -->
+<section id="area-login" style="
+  max-width:420px;
+  margin:24px auto;
+  padding:24px;
+  background:white;
+  border-radius:16px;
+  box-shadow:0 3px 12px #00000012;
+">
+  <h2>Acessar minha conta</h2>
+  <p>Entre com seu e-mail e senha.</p>
+
+  <form id="form-login">
+    <label for="email">E-mail</label>
+    <input
+      id="email"
+      type="email"
+      autocomplete="username"
+      required
+      style="width:100%;padding:12px;margin:8px 0 16px"
+    >
+
+    <label for="senha">Senha</label>
+    <input
+      id="senha"
+      type="password"
+      autocomplete="current-password"
+      required
+      style="width:100%;padding:12px;margin:8px 0 16px"
+    >
+
+    <button type="submit" style="
+      width:100%;
+      padding:14px;
+      background:#b5f245;
+      border:0;
+      border-radius:10px;
+      font-weight:bold;
+      cursor:pointer;
+    ">Entrar</button>
+  </form>
+
+  <p id="mensagem-login" role="status"></p>
+</section>
+
+<script>
+  const clienteSupabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const areaLogin = document.getElementById("area-login");
+  const mensagemLogin = document.getElementById("mensagem-login");
+
+  function atualizarLogin(sessao) {
+    if (sessao) {
+      areaLogin.innerHTML = `
+        <h2>Bem-vindo ao Jornada Fácil IA!</h2>
+        <p>Login realizado com sucesso.</p>
+        <p>O painel conectado será desenvolvido a seguir.</p>
+        <button id="sair" type="button">Sair da conta</button>
+      `;
+
+      document.getElementById("sair")
+        .addEventListener("click", async () => {
+          await clienteSupabase.auth.signOut();
+          window.location.reload();
+        });
+    }
+  }
+
+  document.getElementById("form-login")
+    .addEventListener("submit", async (evento) => {
+      evento.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("senha").value;
+
+      mensagemLogin.textContent = "Verificando acesso...";
+
+      const { data, error } =
+        await clienteSupabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) {
+        mensagemLogin.textContent =
+          "Não foi possível entrar. Confira seus dados.";
+        return;
+      }
+
+      atualizarLogin(data.session);
+    });
+
+  clienteSupabase.auth.getSession()
+    .then(({ data }) => atualizarLogin(data.session));
+</script>
+
 
     header {
       background: #172c3d;

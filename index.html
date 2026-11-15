@@ -293,6 +293,53 @@ async function atualizarLogin(sessao) {
     .then(({ data }) => atualizarLogin(data.session));
 </script>
 
+document.getElementById("form-funcionario")
+  .addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+
+    const mensagem = document.getElementById(
+      "mensagem-funcionario"
+    );
+
+    const empresaId = window.empresaAtualId;
+
+    if (!empresaId) {
+      mensagem.textContent =
+        "Empresa não identificada. Entre novamente.";
+      return;
+    }
+
+    const funcionario = {
+      empresa_id: empresaId,
+      nome: document.getElementById("func-nome").value.trim(),
+      cargo: document.getElementById("func-cargo").value.trim(),
+      matricula: document.getElementById("func-matricula").value.trim(),
+      data_admissao: document.getElementById("func-admissao").value,
+      horas_semanais: Number(
+        document.getElementById("func-horas").value
+      ),
+      ativo: true
+    };
+
+    mensagem.textContent = "Salvando funcionário...";
+
+    const { error } = await clienteSupabase
+      .from("funcionarios")
+      .insert(funcionario);
+
+    if (error) {
+      console.error("Erro ao cadastrar:", error);
+      mensagem.textContent =
+        "Não foi possível salvar. Verifique os dados e as permissões.";
+      return;
+    }
+
+    mensagem.textContent =
+      "Funcionário cadastrado com sucesso!";
+
+    document.getElementById("form-funcionario").reset();
+  });
+
 </body>
 </html>
 

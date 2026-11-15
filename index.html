@@ -359,12 +359,20 @@ const { count, error: erroContagem } =
     .eq("empresa_id", empresaId)
     .eq("ativo", true);
 
-if (!erroContagem) {
-  document.getElementById("total-funcionarios")
-    .textContent = count ?? 0;
+
+if (!erroContagem && count !== null) {
+  const contador = document.getElementById("total-funcionarios");
+
+  if (contador) {
+    contador.textContent = String(count);
+    console.log("Contador atualizado:", count);
+  }
 } else {
   console.error("Erro ao atualizar contador:", erroContagem);
+  mensagem.textContent =
+    "Funcionário salvo, mas não foi possível atualizar o contador.";
 }
+
 
   });
   

@@ -250,7 +250,47 @@ async function atualizarLogin(sessao) {
   } else {
     const empresa = empresas[0];
     window.empresaAtualId = empresa.id;
+
     
+const resultadoFuncionarios =
+  document.getElementById("resultado-funcionarios");
+
+const { data: listaFuncionarios, error: erroLista } =
+  await clienteSupabase
+    .from("funcionarios")
+    .select("nome, cargo, matricula")
+    .eq("empresa_id", empresa.id)
+    .eq("ativo", true)
+    .order("nome");
+
+if (erroLista) {
+  resultadoFuncionarios.textContent =
+    "Não foi possível carregar os funcionários.";
+} else {
+  resultadoFuncionarios.replaceChildren();
+
+  if (listaFuncionarios.length === 0) {
+    resultadoFuncionarios.textContent =
+      "Nenhum funcionário cadastrado.";
+  } else {
+    listaFuncionarios.forEach((funcionario) => {
+      const item = document.createElement("div");
+      item.style.padding = "12px";
+      item.style.borderBottom = "1px solid #ddd";
+
+      const nome = document.createElement("strong");
+      nome.textContent = funcionario.nome;
+
+      const detalhes = document.createElement("p");
+      detalhes.textContent =
+        `${funcionario.cargo} | Matrícula: ${funcionario.matricula}`;
+
+      item.append(nome, detalhes);
+      resultadoFuncionarios.appendChild(item);
+    });
+  }
+}
+
 const { count, error: erroContagem } =
   await clienteSupabase
     .from("funcionarios")

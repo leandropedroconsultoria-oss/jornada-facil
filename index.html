@@ -230,21 +230,6 @@ async function atualizarLogin(sessao) {
       window.location.reload();
     });
 }
- { {
-      areaLogin.innerHTML = `
-        <h2>Bem-vindo ao Jornada Fácil IA!</h2>
-        <p>Login realizado com sucesso.</p>
-        <p>O painel conectado será desenvolvido a seguir.</p>
-        <button id="sair" type="button">Sair da conta</button>
-      `;
-
-      document.getElementById("sair")
-        .addEventListener("click", async () => {
-          await clienteSupabase.auth.signOut();
-          window.location.reload();
-        });
-    }
-  }
 
   document.getElementById("form-login")
     .addEventListener("submit", async (evento) => {

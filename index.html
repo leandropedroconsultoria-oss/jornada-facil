@@ -183,7 +183,54 @@
   const areaLogin = document.getElementById("area-login");
   const mensagemLogin = document.getElementById("mensagem-login");
 
- function atualizarLogin(sessao) { {
+
+async function atualizarLogin(sessao) {
+  const painel = document.getElementById("painel-admin");
+
+  painel.style.display = "none";
+
+  if (!sessao) return;
+
+  const { data: empresas, error } = await clienteSupabase
+    .from("empresas")
+    .select("id, nome")
+    .limit(1);
+
+  if (error || !empresas || empresas.length === 0) {
+    areaLogin.innerHTML = `
+      <h2>Acesso não autorizado</h2>
+      <p>Sua conta não possui uma empresa
+      disponível como administrador.</p>
+      <button id="sair" type="button">
+        Sair da conta
+      </button>
+    `;
+  } else {
+    const empresa = empresas[0];
+
+    painel.style.display = "block";
+
+    areaLogin.innerHTML = `
+      <h2>Bem-vindo ao Jornada Fácil IA!</h2>
+      <p>Login realizado com sucesso.</p>
+      <p>Empresa autorizada:
+      <strong id="empresa-autorizada"></strong></p>
+      <button id="sair" type="button">
+        Sair da conta
+      </button>
+    `;
+
+    document.getElementById("empresa-autorizada")
+      .textContent = empresa.nome;
+  }
+
+  document.getElementById("sair")
+    .addEventListener("click", async () => {
+      await clienteSupabase.auth.signOut();
+      window.location.reload();
+    });
+}
+ { {
       areaLogin.innerHTML = `
         <h2>Bem-vindo ao Jornada Fácil IA!</h2>
         <p>Login realizado com sucesso.</p>

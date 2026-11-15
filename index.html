@@ -351,6 +351,21 @@ if (erroContagem) {
       "Funcionário cadastrado com sucesso!";
 
     document.getElementById("form-funcionario").reset();
+    
+const { count, error: erroContagem } =
+  await clienteSupabase
+    .from("funcionarios")
+    .select("*", { count: "exact", head: true })
+    .eq("empresa_id", empresaId)
+    .eq("ativo", true);
+
+if (!erroContagem) {
+  document.getElementById("total-funcionarios")
+    .textContent = count ?? 0;
+} else {
+  console.error("Erro ao atualizar contador:", erroContagem);
+}
+
   });
   
 </script>

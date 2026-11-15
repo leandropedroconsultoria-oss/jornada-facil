@@ -291,15 +291,15 @@ async function atualizarLogin(sessao) {
 
   clienteSupabase.auth.getSession()
     .then(({ data }) => atualizarLogin(data.session));
-</script>
-
-document.getElementById("form-funcionario")
+  document.getElementById("form-funcionario")
   .addEventListener("submit", async (evento) => {
     evento.preventDefault();
 
     const mensagem = document.getElementById(
       "mensagem-funcionario"
     );
+    
+</script>
 
     const empresaId = window.empresaAtualId;
 

@@ -240,7 +240,7 @@ async function atualizarLogin(sessao) {
     `;
   } else {
     const empresa = empresas[0];
-
+    window.empresaAtualId = empresa.id;
     painel.style.display = "block";
 
     areaLogin.innerHTML = `
